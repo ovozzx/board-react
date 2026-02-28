@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 클라이언트 컴포넌트에서 "코드로 페이지 이동"하려면 useRouter()를 써야 한다. => 페이지 전체 새로고침 안 함 (필요 부분만 교체)
-import {API_BASE_URL} from "@/api/apiUrl";
+import {getBoardForEdit, getBoardForModify, updateBoard} from "@/api/apiUrl";
+import Loading from "@/components/common/Loading";
 
 export default function BoardModifyPage({params}) { // params: { boardId: "5" },
     const router = useRouter();
@@ -36,13 +37,8 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
 
 
     const fetchBoardModify = async (boardId) => {
-        const params = new URLSearchParams({
-            boardId: boardId
-        });
 
-        const res = await fetch(
-            `${API_BASE_URL}/board/modify?${params.toString()}`
-        );
+        const res = await getBoardForModify(boardId);
 
         const result = await res.json(); // response 객체 변환
         setData(result);
@@ -51,11 +47,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
         setContent(result.board.content);
     };
 
-    if (!data) return (
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="text-gray-500 text-lg">Loading...</div>
-        </div>
-    );
+    if (!data) return <Loading />;
 
     const handleModifySubmit = async (e) => {
         e.preventDefault(); // form의 기본 제출 동작(페이지 새로고침)을 막음 => router.push가 정상 실행
@@ -71,14 +63,11 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
         fileInputs.flat().forEach(file => formData.append('attachmentList', file));
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await fetch(`${API_BASE_URL}/board/modify`, {
-                method: 'POST',
-                body: formData
-            });
+            const res = await updateBoard(formData);
 
             if (res.ok) {
                 alert("수정이 완료되었습니다.");
-                router.push(`/board/view/${boardId}`);
+                window.location.href = `/board/view/${boardId}`; // SSR 페이지는 하드 네비게이션으로 최신 데이터 반영
             } else {
                 res.text().then(msg => alert(msg)); // res.text() / res.json() → Promise 반환 ==> await 또는 then 으로 결과 받아야 함
             }

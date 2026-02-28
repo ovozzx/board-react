@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/api/apiUrl';
+import {getCategories, createBoard, getCategoriesForWrite} from '@/api/apiUrl';
 import { useRouter } from 'next/navigation';
 
 export default function BoardWritePage() {
@@ -21,7 +21,7 @@ export default function BoardWritePage() {
     const [categoryList, setCategoryList] = useState(null);
 
     const fetchCategoryList = async () => {
-        const res = await fetch(`${API_BASE_URL}/board/write`);
+        const res = await getCategoriesForWrite();
         const categoryList = await res.json();
         setCategoryList(categoryList);
         console.log(categoryList);
@@ -70,13 +70,10 @@ export default function BoardWritePage() {
         fileInputs.flat().forEach(file => formData.append('attachmentList', file));
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await fetch(`${API_BASE_URL}/board/write`, {
-                method: 'POST',
-                body: formData
-            });
+            const res = await createBoard(formData);
 
             if (res.ok) {
-                router.push('/board/list');
+                window.location.href = '/board/list'; // SSR 페이지는 하드 네비게이션으로 이동해야 최신 데이터 반영
             } else {
                 alert('등록 실패');
             }
