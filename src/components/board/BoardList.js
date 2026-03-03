@@ -66,7 +66,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                     총 <span className="font-semibold text-gray-700">{data.boardListCount}</span> 건
                 </div>
                 <button
-                    onClick={() => router.push('/board/write')}
+                    onClick={() => router.push('/boards/write')}
                     className="px-4 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
                 >
                     등록
@@ -94,7 +94,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                         >
                             <div className="text-gray-500">{board.categoryName}</div>
                             <div className="text-gray-800 font-medium text-left truncate"
-                            onClick={() => router.push(`/board/view/${board.boardId}`)}>
+                            onClick={() => router.push(`/boards/${board.boardId}`)}>
                                 {board.title}
                             </div>
                             <div className="text-gray-500">{board.createUser}</div>

@@ -14,14 +14,14 @@ const BoardActions = ({ boardId }) => {
             {/* 버튼 영역 */}
             <div className="flex justify-between mt-4">
                 <button
-                    onClick={() => router.push("/board/list")}
+                    onClick={() => router.push("/boards")}
                     className="px-4 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                     목록
                 </button>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => router.push(`/board/modify/${boardId}`)}
+                        onClick={() => router.push(`/boards/${boardId}/modify`)}
                         className="px-4 py-2 rounded border border-blue-400 text-sm text-blue-500 hover:bg-blue-50 transition-colors"
                     >
                         수정
@@ -40,7 +40,7 @@ const BoardActions = ({ boardId }) => {
                 <DeleteModal
                     boardId={boardId}
                     onClose={() => setShowModal(false)}
-                    onDeleted={() => window.location.href = "/board/list"}
+                    onDeleted={() => window.location.href = "/boards"}
                 />
             )}
         </>

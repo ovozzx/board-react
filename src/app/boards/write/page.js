@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {getCategories, createBoard, getCategoriesForWrite} from '@/api/apiUrl';
+import {getCategories, writeBoard} from '@/api/apiUrl';
 import { useRouter } from 'next/navigation';
 
 export default function BoardWritePage() {
@@ -21,7 +21,7 @@ export default function BoardWritePage() {
     const [categoryList, setCategoryList] = useState(null);
 
     const fetchCategoryList = async () => {
-        const res = await getCategoriesForWrite();
+        const res = await getCategories();
         const categoryList = await res.json();
         setCategoryList(categoryList);
         console.log(categoryList);
@@ -70,10 +70,10 @@ export default function BoardWritePage() {
         fileInputs.flat().forEach(file => formData.append('attachmentList', file));
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await createBoard(formData);
+            const res = await writeBoard(formData);
 
             if (res.ok) {
-                window.location.href = '/board/list'; // SSR 페이지는 하드 네비게이션으로 이동해야 최신 데이터 반영
+                window.location.href = '/boards'; // SSR 페이지는 하드 네비게이션으로 이동해야 최신 데이터 반영
             } else {
                 alert('등록 실패');
             }
@@ -197,7 +197,7 @@ export default function BoardWritePage() {
             <div className="flex justify-between mt-4">
                 <button
                     type="button"
-                    onClick={() => router.push('/board/list')}
+                    onClick={() => router.push('/boards')}
                     className="px-4 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                     취소

@@ -2,44 +2,39 @@ export const API_BASE_URL = "http://localhost:8081/api";
 
 // 게시글 목록 조회
 export const getBoards = async (params) => {
-    return await fetch(`${API_BASE_URL}/board/list?${params.toString()}`);
+    return await fetch(`${API_BASE_URL}/boards?${params.toString()}`);
 };
 
 // 게시글 상세 조회
 export const getBoard = async (boardId) => {
-    return await fetch(`${API_BASE_URL}/board/view/${boardId}`);
-};
-
-// 게시글 수정 데이터 조회
-export const getBoardForModify = async (boardId) => {
-    return await fetch(`${API_BASE_URL}/board/modify/${boardId}`);
+    return await fetch(`${API_BASE_URL}/boards/${boardId}`);
 };
 
 // 카테고리 목록 조회
-export const getCategoriesForWrite = async () => {
-    return await fetch(`${API_BASE_URL}/board/write`);
+export const getCategories = async () => {
+    return await fetch(`${API_BASE_URL}/boards/cateogories`);
 };
 
 // 게시글 등록
-export const createBoard = async (formData) => {
-    return await fetch(`${API_BASE_URL}/board/write`, {
+export const writeBoard = async (formData) => {
+    return await fetch(`${API_BASE_URL}/boards`, {
         method: 'POST',
         body: formData
     });
 };
 
 // 게시글 수정
-export const updateBoard = async (formData) => {
-    return await fetch(`${API_BASE_URL}/board/modify`, {
-        method: 'POST',
+export const modifyBoard = async (boardId, formData) => {
+    return await fetch(`${API_BASE_URL}/boards/${boardId}`, {
+        method: 'PUT',
         body: formData
     });
 };
 
 // 게시글 삭제
 export const deleteBoard = async (boardId, password) => {
-    return await fetch(`${API_BASE_URL}/board/delete`, {
-        method: "POST",
+    return await fetch(`${API_BASE_URL}/boards/${boardId}`, {
+        method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         },
@@ -51,8 +46,8 @@ export const deleteBoard = async (boardId, password) => {
 };
 
 // 댓글 등록
-export const createReply = async (boardId, replyContent) => {
-    return await fetch(`${API_BASE_URL}/reply/write`, {
+export const registerReply = async (boardId, replyContent) => {
+    return await fetch(`${API_BASE_URL}/boards/{boardId}/replies`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -65,6 +60,6 @@ export const createReply = async (boardId, replyContent) => {
 };
 
 // 첨부파일 다운로드 URL
-export const getDownloadUrl = (fileId) => {
-    return `${API_BASE_URL}/board/download?fileId=${fileId}`;
+export const getAttachment = (boardId, attachmentId) => {
+    return `${API_BASE_URL}/boards/${boardId}/attachments/${attachmentId}`;
 };

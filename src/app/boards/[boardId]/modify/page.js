@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 클라이언트 컴포넌트에서 "코드로 페이지 이동"하려면 useRouter()를 써야 한다. => 페이지 전체 새로고침 안 함 (필요 부분만 교체)
-import {getBoardForEdit, getBoardForModify, updateBoard} from "@/api/apiUrl";
+import {getBoard, modifyBoard} from "@/api/apiUrl";
 import Loading from "@/components/common/Loading";
 
 export default function BoardModifyPage({params}) { // params: { boardId: "5" },
@@ -38,9 +38,10 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
 
     const fetchBoardModify = async (boardId) => {
 
-        const res = await getBoardForModify(boardId);
+        const res = await getBoard(boardId);
 
         const result = await res.json(); // response 객체 변환
+        console.log("----", result);
         setData(result);
         setCreateUser(result.board.createUser);
         setTitle(result.board.title);
@@ -63,11 +64,11 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
         fileInputs.flat().forEach(file => formData.append('attachmentList', file));
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await updateBoard(formData);
+            const res = await modifyBoard(boardId, formData);
 
             if (res.ok) {
                 alert("수정이 완료되었습니다.");
-                window.location.href = `/board/view/${boardId}`; // SSR 페이지는 하드 네비게이션으로 최신 데이터 반영
+                window.location.href = `/boards/${boardId}`; // SSR 페이지는 하드 네비게이션으로 최신 데이터 반영
             } else {
                 res.text().then(msg => alert(msg)); // res.text() / res.json() → Promise 반환 ==> await 또는 then 으로 결과 받아야 함
             }
@@ -209,7 +210,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
                 <div className="flex justify-between mt-4">
                     <button
                         type="button"
-                        onClick={() => router.push(`/board/view/${boardId}`)}
+                        onClick={() => router.push(`/boards/${boardId}`)}
                         className="px-4 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
                     >
                         취소

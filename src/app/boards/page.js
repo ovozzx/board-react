@@ -4,7 +4,7 @@ import BoardList from "@/components/board/BoardList";
 
 export default async function BoardListPage() {
     // 서버에서 초기 데이터 fetch (1페이지, 검색 조건 없음)
-    const res = await fetch(`${API_BASE_URL}/board/list?page=1`, {
+    const res = await fetch(`${API_BASE_URL}/boards?page=1`, {
         cache: 'no-store' // 항상 최신 데이터
     });
 

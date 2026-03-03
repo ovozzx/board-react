@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createReply, getBoard } from "@/api/apiUrl";
+import {getBoard, registerReply} from "@/api/apiUrl";
 
 const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 내려온 초기 댓글 목록
     const [replyContent, setReplyContent] = useState("");
@@ -12,7 +12,7 @@ const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 �
             alert("댓글을 입력해주세요.");
             return;
         }
-        const res = await createReply(boardId, replyContent);
+        const res = await registerReply(boardId, replyContent);
 
         if(res.ok){
             setReplyContent("");
