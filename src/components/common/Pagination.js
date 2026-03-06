@@ -5,13 +5,13 @@ const Pagination = ({ pageInfo, onPageChange }) => {
 
     return (
         <div className="flex items-center justify-center gap-1 mt-6">
-            <button
-                onClick={() => onPageChange(pageInfo.startPage - 1)}
-                disabled={pageInfo.startPage === 1}
-                className="px-3 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-                이전
-            </button>
+            {/*<button*/}
+            {/*    onClick={() => onPageChange(pageInfo.startPage - 1)}*/}
+            {/*    disabled={pageInfo.startPage === 1}*/}
+            {/*    className="px-3 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"*/}
+            {/*>*/}
+            {/*    이전*/}
+            {/*</button>*/}
             {Array.from(
                 { length: pageInfo.endPage - pageInfo.startPage + 1 },
                 (element, index) => pageInfo.startPage + index
@@ -28,13 +28,13 @@ const Pagination = ({ pageInfo, onPageChange }) => {
                     {pageNum}
                 </button>
             ))}
-            <button
-                onClick={() => onPageChange(pageInfo.endPage + 1)}
-                disabled={pageInfo.endPage === pageInfo.totalPages}
-                className="px-3 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-                다음
-            </button>
+            {/*<button*/}
+            {/*    onClick={() => onPageChange(pageInfo.endPage + 1)}*/}
+            {/*    disabled={pageInfo.endPage === pageInfo.totalPages}*/}
+            {/*    className="px-3 py-2 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"*/}
+            {/*>*/}
+            {/*    다음*/}
+            {/*</button>*/}
         </div>
     );
 };

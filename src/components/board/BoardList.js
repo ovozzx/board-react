@@ -10,7 +10,7 @@ import Pagination from "@/components/common/Pagination";
 const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이터
     const router = useRouter();
     const [data, setData] = useState(initialData);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1); // 현재 위치하는 페이지 정보
     const [startDate, setStartDate] = useState(initialData.startDate);
     const [endDate, setEndDate] = useState(initialData.endDate);
     const [categoryId, setCategoryId] = useState('');
@@ -18,13 +18,12 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
     const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        fetchBoardList(1);
-        setPage(1);
-    }, [pageSize]);
+        fetchBoardList();
+    }, [pageSize, page]);
 
-    const fetchBoardList = async (pageNumber) => {
+    const fetchBoardList = async () => {
         const params = new URLSearchParams({
-            page: pageNumber || 1,
+            page: page || 1,
             startDate: startDate || '',
             endDate: endDate || '',
             categoryId: categoryId || '',
@@ -44,8 +43,14 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
 
     const handleSearch = () => {
         setPage(1);
-        fetchBoardList(1);
+        fetchBoardList();
     };
+
+    // 페이지 이동 핸들러
+    const onPageSizeChange = (pageSize) => {
+        setPageSize(pageSize);
+        setPage(1);
+    }
 
     return (
         <>
@@ -60,7 +65,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                 onEndDateChange={setEndDate}
                 onCategoryChange={setCategoryId}
                 onKeywordChange={setKeyword}
-                setPageSize={setPageSize}
+                onPageSizeChange={onPageSizeChange}
                 onSearch={handleSearch}
             />
 

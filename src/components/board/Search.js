@@ -1,5 +1,5 @@
 const Search = ({ startDate, endDate, categoryId, keyword, categoryList,
-                   onStartDateChange, onEndDateChange, onCategoryChange, onKeywordChange, setPageSize, onSearch }) => { // state를 부모에 두고 props로 전달
+                   onStartDateChange, onEndDateChange, onCategoryChange, onKeywordChange, onPageSizeChange, onSearch }) => { // state를 부모에 두고 props로 전달
 
 
     return (
@@ -35,7 +35,7 @@ const Search = ({ startDate, endDate, categoryId, keyword, categoryList,
                     </option>
                 ))}
             </select>
-            <select onChange={(e) => {setPageSize(e.target.value)}}>
+            <select onChange={(e) => {onPageSizeChange(e.target.value)}}>
                 <option value={10}>10</option>
                 <option value={15}>15</option>
                 <option value={20}>20</option>
