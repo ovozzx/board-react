@@ -2,28 +2,25 @@
 
 import { useState } from 'react';
 import {getBoard, registerReply} from "@/api/apiUrl";
+import ReplyWrite from "@/components/board/ReplyWrite";
 
 const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 내려온 초기 댓글 목록
     const [replyContent, setReplyContent] = useState("");
     const [replyList, setReplyList] = useState(initialReplyList); // 댓글 목록을 자체 state로 관리
+    const [activeReplyId, setActiveReplyId] = useState(null); // 답글 활성화된 댓글 id
 
-    const handleReplyRegister = async () => {
-        if(!replyContent.trim()){
-            alert("댓글을 입력해주세요.");
-            return;
-        }
-        const res = await registerReply(boardId, replyContent);
+    // 답글 달기
+    const onRereplyHandler = async (replyId) => {
+        setActiveReplyId(replyId);
+    }
 
-        if(res.ok){
-            setReplyContent("");
-            // 댓글 등록 후 최신 댓글 목록 다시 조회
-            const boardRes = await getBoard(boardId);
-            const data = await boardRes.json();
-            setReplyList(data.replyList);
-        } else{
-            alert("댓글 등록에 실패하였습니다.");
-        }
-    };
+    // 등록 후 갱신
+    const onReloadReplyList = async () => {
+        const res = await getBoard(boardId);
+        const data = await res.json();
+        setReplyList(data.replyList);
+        setActiveReplyId(null);
+    }
 
     return (
         <div className="mt-8">
@@ -34,27 +31,23 @@ const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 �
                 {replyList?.length === 0 && (
                     <div className="px-4 py-6 text-sm text-gray-400 text-center">댓글이 없습니다.</div>
                 )}
-                {replyList?.map((reply, index) => ( // 현재요소, 순번
-                    <div key={index} className="flex items-start gap-3 px-4 py-3">
-                        <span className="text-xs text-gray-400 whitespace-nowrap mt-0.5">{reply.createDate}</span>
-                        <span className="text-sm text-gray-700">{reply.content}</span>
-                    </div>
+                {replyList?.map((reply) => ( // 현재요소, 순번
+                    <>
+                        <div key={reply.replyId} className="flex items-start gap-3 px-4 py-3" style={{marginLeft: reply.depth * 20}}>
+                            <span className="text-xs text-gray-400 whitespace-nowrap mt-0.5">{reply.createDate}</span>
+                            <span className="text-sm text-gray-700">{reply.content}</span>
+                            { (reply.depth != 4) &&
+                                <button className="px-2 py-1 bg-gray-700 text-white text-sm rounded"
+                                    onClick={() => onRereplyHandler(reply.replyId)}
+                                    style={{fontSize: 12 }}>
+                                답글 달기
+                            </button>}
+                        </div>
+                        {(reply.replyId == activeReplyId ? true : false) && <ReplyWrite boardId={boardId} parentId={reply.replyId} onSuccess={onReloadReplyList}/>}
+                    </>
                 ))}
             </div>
-            <div className="flex gap-2">
-                <textarea
-                    value={replyContent}
-                    onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder="댓글을 입력해 주세요."
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 resize-none focus:outline-none focus:ring-1 focus:ring-blue-400"
-                    rows={3}
-                />
-                <button
-                    onClick={handleReplyRegister}
-                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors self-end">
-                    등록
-                </button>
-            </div>
+            <ReplyWrite boardId={boardId} onSuccess={onReloadReplyList}/>
         </div>
     );
 };

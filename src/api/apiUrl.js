@@ -46,7 +46,7 @@ export const deleteBoard = async (boardId, password) => {
 };
 
 // 댓글 등록
-export const registerReply = async (boardId, replyContent) => {
+export const registerReply = async (boardId, parentId, replyContent) => {
     return await fetch(`${API_BASE_URL}/boards/{boardId}/replies`, {
         method: "POST",
         headers: {
@@ -54,6 +54,7 @@ export const registerReply = async (boardId, replyContent) => {
         },
         body: JSON.stringify({
             boardId: boardId,
+            parentReplyId: parentId,
             content: replyContent
         })
     });
