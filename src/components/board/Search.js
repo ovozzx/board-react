@@ -1,5 +1,7 @@
 const Search = ({ startDate, endDate, categoryId, keyword, categoryList,
-                   onStartDateChange, onEndDateChange, onCategoryChange, onKeywordChange, onSearch }) => { // state를 부모에 두고 props로 전달
+                   onStartDateChange, onEndDateChange, onCategoryChange, onKeywordChange, setPageSize, onSearch }) => { // state를 부모에 두고 props로 전달
+
+
     return (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4 flex flex-wrap items-center gap-3">
             <span className="text-sm text-gray-600 font-medium whitespace-nowrap">등록일</span>
@@ -32,6 +34,11 @@ const Search = ({ startDate, endDate, categoryId, keyword, categoryList,
                         {category.categoryName}
                     </option>
                 ))}
+            </select>
+            <select onChange={(e) => {setPageSize(e.target.value)}}>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
             </select>
             <input
                 name="keyword"

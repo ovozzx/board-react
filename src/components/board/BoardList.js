@@ -13,12 +13,14 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
     const [page, setPage] = useState(1);
     const [startDate, setStartDate] = useState(initialData.startDate);
     const [endDate, setEndDate] = useState(initialData.endDate);
-    const [categoryId, setCategoryId] = useState();
-    const [keyword, setKeyword] = useState();
+    const [categoryId, setCategoryId] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
-        fetchBoardList(page);
-    }, [page]);
+        fetchBoardList(1);
+        setPage(1);
+    }, [pageSize]);
 
     const fetchBoardList = async (pageNumber) => {
         const params = new URLSearchParams({
@@ -26,7 +28,8 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
             startDate: startDate || '',
             endDate: endDate || '',
             categoryId: categoryId || '',
-            keyword: keyword || ''
+            keyword: keyword || '',
+            pageSize: pageSize || 10
         });
         // get은 body 안됨
         const res = await getBoards(params);
@@ -57,6 +60,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                 onEndDateChange={setEndDate}
                 onCategoryChange={setCategoryId}
                 onKeywordChange={setKeyword}
+                setPageSize={setPageSize}
                 onSearch={handleSearch}
             />
 
