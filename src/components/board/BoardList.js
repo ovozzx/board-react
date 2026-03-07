@@ -117,7 +117,9 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
 
             {/* 페이징 */}
             <Pagination
-                pageInfo={data.pageInfo}
+                totalCount={data.boardListCount}
+                currentPage={page}
+                pageSize={pageSize}
                 onPageChange={setPage}
             />
         </>

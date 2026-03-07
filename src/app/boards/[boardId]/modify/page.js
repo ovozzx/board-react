@@ -13,7 +13,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
     const [passwordInput, setPasswordInput] = useState('');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [fileInputs, setFileInputs] = useState([[], [], []]); // 추가 첨부파일
+    const [fileInputs, setFileInputs] = useState([]); // 추가 첨부파일
     const [deleteFileIds, setDeleteFileIds] = useState([]); // 삭제 첨부파일
     const [errors, setErrors] = useState({ passwordRegex: false });
     const [saveDisabled, setSaveDisabled] = useState(true);
@@ -193,7 +193,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
                             ))}
                             {/*남은 것만큼 input 생성 = 3 - 기존 파일 수*/}
                             {/*(element, index) => index ===> 각 요소를 어떻게 채울지 결정하는 콜백 == “각 요소를 인덱스로 채워라”*/}
-                            {Array.from({length: 3 - (data.fileList?.length || 0)}, (element, index) => index).map(arrElement => ( // 배열 요소값, 배열 인덱스 파라미터 순서로 구분
+                            {Array.from({length: 10 - (data.fileList?.length || 0)}, (element, index) => index).map(arrElement => ( // 배열 요소값, 배열 인덱스 파라미터 순서로 구분
                                 <input
                                     key={arrElement + data.fileList?.length}
                                     type="file"
