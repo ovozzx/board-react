@@ -12,9 +12,10 @@ export default function BoardWritePage() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [categoryId, setCategoryId] = useState('');
-    const [fileInputs, setFileInputs] = useState([[], [], []]);
+    const [fileInputs, setFileInputs] = useState([null]);
     const [errors, setErrors] = useState({ passwordMatch: false, passwordRegex: false });
     const [saveDisabled, setSaveDisabled] = useState(true);
+
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{4,15}$/;
 
@@ -53,10 +54,14 @@ export default function BoardWritePage() {
 
     const handleFileChange = (index, e) => {
         const updated = [...fileInputs]; // 기존 배열을 복사해서 새로운 배열 생성
-        updated[index] = [...e.target.files]; // 배열 복사! e.target.files → FileList 객체. 선택된 파일이 하나라도 FileList[0] 형태로 들어있음 => 파일 하나라도 배열처럼 다뤄야 함
+        updated[index] = e.target.files[0]; // 배열 복사! e.target.files → FileList 객체. 선택된 파일이 하나라도 FileList[0] 형태로 들어있음 => 파일 하나라도 배열처럼 다뤄야 함
         setFileInputs(updated);
     };
-    // TODO : 최대 10개, 가변 '+' 클릭
+
+    // 첨부파일 개수 추가
+    const onAddHandler = () => {
+        setFileInputs([...fileInputs, null]);
+    }
 
     const handleSubmit = async () => {
         if (saveDisabled) return;
@@ -67,7 +72,8 @@ export default function BoardWritePage() {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('categoryId', categoryId);
-        fileInputs.flat().forEach(file => formData.append('attachmentList', file));
+        fileInputs.filter((item) => Boolean(item)).forEach(file => formData.append('attachmentList', file));
+        // 각 요소를 Boolean(element)로 평가 → null, undefined, 0, "" 등은 false로 걸러짐
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
             const res = await writeBoard(formData);
@@ -178,15 +184,18 @@ export default function BoardWritePage() {
                 <div className="grid grid-cols-[120px_1fr]">
                     <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">첨부파일</div>
                     <div className="px-4 py-3 space-y-2">
-                        {[0, 1, 2].map((index) => (
-                            <div key={index} className="flex items-center gap-3">
-                                <span className="text-xs text-gray-400 w-4">{index + 1}</span>
-                                <input
-                                    type="file"
-                                    onChange={(e) => handleFileChange(index, e)}
-                                    className="text-sm text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border file:border-gray-300 file:text-sm file:text-gray-600 file:bg-white hover:file:bg-gray-50"
-                                />
-                            </div>
+                        {fileInputs.map((_, index) => (
+                            <>
+                                <div key={index} className="flex items-center gap-3">
+                                    <span className="text-xs text-gray-400 w-4">{index + 1}</span>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => handleFileChange(index, e)}
+                                        className="text-sm text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border file:border-gray-300 file:text-sm file:text-gray-600 file:bg-white hover:file:bg-gray-50"
+                                    />
+                                    { index === 0 && fileInputs.length < 10 && <button onClick={() => onAddHandler()} className=" items-center gap-3">+</button>}
+                                </div>
+                            </>
                         ))}
                     </div>
                 </div>
