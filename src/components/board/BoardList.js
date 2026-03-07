@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getBoards } from "@/api/apiUrl";
 import Search from "@/components/board/Search";
 import Pagination from "@/components/common/Pagination";
-
+// TODO : 검색, 페이지 설정 유지, 첨부파일 삭제
 // 검색, 페이징, 목록 테이블 등 인터랙션이 필요한 영역 (클라이언트 컴포넌트)
 const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이터
     const router = useRouter();

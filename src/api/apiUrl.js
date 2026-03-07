@@ -22,6 +22,17 @@ export const writeBoard = async (formData) => {
         body: formData
     });
 };
+// 고차함수와 연관  doSome()()();
+
+// const doSome = ()=>{
+//     console.log("1depth")
+//     return ()=>{ console.log("2depth")}
+// }
+//
+// doSome(); -> 1
+// doSome()(); -> 1, 2
+// TODO : 클로즈업, 끌어올리기 (호이스팅) => 둘 관련 있음 / 실행 컨텍스트 / promise 확실하게 (실제 샘플) ** 프라미스 리턴하는 함수 만들어서 그 함수 사용하기 **
+
 
 // 게시글 수정
 export const modifyBoard = async (boardId, formData) => {

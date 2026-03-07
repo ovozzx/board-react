@@ -36,6 +36,7 @@ const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 �
                         <div key={reply.replyId} className="flex items-start gap-3 px-4 py-3" style={{marginLeft: reply.depth * 20}}>
                             <span className="text-xs text-gray-400 whitespace-nowrap mt-0.5">{reply.createDate}</span>
                             <span className="text-sm text-gray-700">{reply.content}</span>
+                            {/*4보다 클 경우 + 서버 검증*/}
                             { (reply.depth != 4) &&
                                 <button className="px-2 py-1 bg-gray-700 text-white text-sm rounded"
                                     onClick={() => onRereplyHandler(reply.replyId)}
