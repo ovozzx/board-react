@@ -68,7 +68,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
 
             if (res.ok) {
                 alert("수정이 완료되었습니다.");
-                window.location.href = `/boards/${boardId}`; // SSR 페이지는 하드 네비게이션으로 최신 데이터 반영
+                window.location.href = `/boards/${boardId}`;
             } else {
                 res.text().then(msg => alert(msg)); // res.text() / res.json() → Promise 반환 ==> await 또는 then 으로 결과 받아야 함
             }
@@ -81,15 +81,15 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
     const handleFileChange = (index, e) => {
         const updated = [...fileInputs]; // 기존 배열을 복사해서 새로운 배열 생성
         updated[index] = [...e.target.files]; // 배열 복사! e.target.files → FileList 객체. 선택된 파일이 하나라도 FileList[0] 형태로 들어있음 => 파일 하나라도 배열처럼 다뤄야 함
-        setFileInputs(updated);
+        setFileInputs(updated); // 새로 추가하는 파일 (아직 업로드 전)
     };
 
     // 파일 삭제
     const handleDeleteExistingFile = (fileId) => {
-        setDeleteFileIds(prev => [...prev, fileId]);
+        setDeleteFileIds(prev => [...prev, fileId]); //  삭제할 기존 파일의 ID 목록
         setData(prev => ({
             ...prev,
-            fileList: prev.fileList.filter(file => file.attachmentId !== fileId)
+            fileList: prev.fileList.filter(file => file.attachmentId !== fileId) // 기존 파일 화면 표시용
         }));
         console.log("삭제 id : ", deleteFileIds);
     }

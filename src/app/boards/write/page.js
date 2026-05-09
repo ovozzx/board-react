@@ -33,7 +33,7 @@ export default function BoardWritePage() {
     }, []);
 
     useEffect(() => {
-        if (categoryList && categoryList.length > 0 && !categoryId) {
+        if (categoryList && categoryList.length > 0 && !categoryId) { // 비동기 데이터 기반 기본값 자동 세팅
             setCategoryId(categoryList[0].categoryId);
         }
     }, [categoryList]);
@@ -63,6 +63,11 @@ export default function BoardWritePage() {
         setFileInputs([...fileInputs, null]);
     }
 
+    // 첨부파일 항목 삭제
+    const onRemoveHandler = (index) => {
+        setFileInputs(fileInputs.filter((_, i) => i !== index));
+    }
+
     const handleSubmit = async () => {
         if (saveDisabled) return;
 
@@ -79,7 +84,7 @@ export default function BoardWritePage() {
             const res = await writeBoard(formData);
 
             if (res.ok) {
-                window.location.href = '/boards'; // SSR 페이지는 하드 네비게이션으로 이동해야 최신 데이터 반영
+                window.location.href = '/boards';
             } else {
                 alert('등록 실패');
             }
@@ -193,6 +198,9 @@ export default function BoardWritePage() {
                                         onChange={(e) => handleFileChange(index, e)}
                                         className="text-sm text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border file:border-gray-300 file:text-sm file:text-gray-600 file:bg-white hover:file:bg-gray-50"
                                     />
+                                    {/*첫번째 항목만 + 버튼 표기, 다음은 x 버튼 표기*/}
+                                    { index != 0 && <button onClick={() => onRemoveHandler(index)}>x</button>}
+                                    {/*콜백 파라미터 이름이 바깥 변수와 겹치면 바깥 변수는 못 씀, onClick이 호출될 때 React는 콜백에 이벤트 객체(SyntheticEvent) 를 넘겨줌 .*/}
                                     { index === 0 && fileInputs.length < 10 && <button onClick={() => onAddHandler()} className=" items-center gap-3">+</button>}
                                 </div>
                             </>

@@ -2,7 +2,9 @@ export const API_BASE_URL = "http://localhost:8081/api";
 
 // 게시글 목록 조회
 export const getBoards = async (params) => {
-    return await fetch(`${API_BASE_URL}/boards?${params.toString()}`);
+    return await fetch(`${API_BASE_URL}/boards?${params.toString()}`, {
+        cache: 'no-store'
+    });
 };
 
 // 게시글 상세 조회

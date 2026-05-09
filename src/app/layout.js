@@ -1,6 +1,8 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 
+// layout.js는 Next.js App Router의 예약 파일
+// src/app/layout.js는 필수 -> 모든 페이지를 감싸는 공통 껍데기(레이아웃)를 정의
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -14,4 +16,6 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>{children}</body>
     </html>
   )
+  // {children} 자리에 각 페이지의 내용(page.js가 렌더한 결과)이 들어감
+  // 공통 헤더/푸터/네비게이션 바를 넣고 싶다면 여기 <body> 안 {children} 위/아래에 추가
 }
