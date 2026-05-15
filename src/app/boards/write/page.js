@@ -15,7 +15,7 @@ export default function BoardWritePage() {
     const [fileInputs, setFileInputs] = useState([null]);
     const [errors, setErrors] = useState({ passwordMatch: false, passwordRegex: false });
     const [saveDisabled, setSaveDisabled] = useState(true);
-
+    // TODO : 상태 관리 -> 이뮤터블. 새로운 값을 만들어서 넣어야 함
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{4,15}$/;
 
@@ -39,6 +39,7 @@ export default function BoardWritePage() {
     }, [categoryList]);
 
     // 입력 검증
+    // TODO : zod 조드, yup? -> 유효성 검증 찾아보기
     useEffect(() => {
         const allFilled = createUser && password && passwordConfirm && title && content && categoryId;
         const passwordMatch = password === passwordConfirm;

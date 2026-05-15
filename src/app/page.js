@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Loading from "@/components/common/Loading";
+// react : 선언, 모델 <-> js : 직접 접근
 // src/app/ 폴더 = URL / (사이트 최상위)
 export default function Home() {
   const router = useRouter();

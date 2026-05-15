@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 클라이언트 컴포넌트에서 "코드로 페이지 이동"하려면 useRouter()를 써야 한다. => 페이지 전체 새로고침 안 함 (필요 부분만 교체)
-import {getBoard, modifyBoard} from "@/api/apiUrl";
+import {getBoard, getBoardForModify, modifyBoard} from "@/api/apiUrl";
 import Loading from "@/components/common/Loading";
 
 export default function BoardModifyPage({params}) { // params: { boardId: "5" },
@@ -38,7 +38,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
 
     const fetchBoardModify = async (boardId) => {
 
-        const res = await getBoard(boardId);
+        const res = await getBoardForModify(boardId);
 
         const result = await res.json(); // response 객체 변환
         console.log("----", result);

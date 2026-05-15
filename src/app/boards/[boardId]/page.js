@@ -17,6 +17,7 @@ export default function BoardDetailPage({ params }) {
 
     // useEffect => 첫 렌더 이후에야 실행
     useEffect(() => { // useEffect의 콜백은 cleanup 함수를 반환해야 해서 async로 만들면 안됨!
+        // TODO : 데이터 받아오는 것만 해당 컴포넌트가 알도록 (apiUrl 파일) json인 것도 모르도록 받는 게 board이도록
         const fetchDetail = async () => {
             const res = await getBoard(boardId);
             if (res.ok) {

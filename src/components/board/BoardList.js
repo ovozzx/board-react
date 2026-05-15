@@ -113,6 +113,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                     name="categoryId"
                     value={categoryId}
                     onChange={(e) => onCategoryChange(e.target.value)}
+                    // onChange={onCategoryChange} 어떤 문제 생길 수 있음
                     className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400"
                 >
                     <option value="0">전체 카테고리</option>
@@ -190,6 +191,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
                 </div>
             </div>
 
+            {/*TODO : 페이지네이션 컴포넌트화*/}
             <div className="flex items-center justify-center gap-1 mt-6">
                 {/*첫 페이지*/}
                 <button className="px-3 py-2 rounded border text-sm transition-colors" onClick={() => onPageChange(1)}>«</button>
