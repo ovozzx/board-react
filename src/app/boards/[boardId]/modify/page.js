@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 클라이언트 컴포넌트에서 "코드로 페이지 이동"하려면 useRouter()를 써야 한다. => 페이지 전체 새로고침 안 함 (필요 부분만 교체)
 import {getBoard, getBoardForModify, modifyBoard} from "@/api/apiUrl";
 import Loading from "@/components/common/Loading";
+import {modifyBoardValidate, writeBoardValidate} from "@/components/common/validate";
 
 export default function BoardModifyPage({params}) { // params: { boardId: "5" },
     const router = useRouter();
     const [data, setData] = useState(null);
     const boardId = params.boardId; // Next.js => [폴더명] = URL 파라미터
     const [createUser, setCreateUser] = useState('');
-    const [passwordInput, setPasswordInput] = useState('');
+    const [userPassword, setUserPassword] = useState('');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [fileInputs, setFileInputs] = useState([]); // 추가 첨부파일
@@ -25,27 +26,32 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
 
     // 입력 검증
     useEffect(() => {
-        const allFilled = createUser && passwordInput && title && content;
-        const passwordValid = passwordRegex.test(passwordInput);
-
-        setErrors({
-            passwordRegex: !passwordValid
+        const result = modifyBoardValidate.safeParse({
+            createUser,
+            userPassword,
+            title,
+            content
         });
+        //  { success: true, data: {...} } or  { success: false, error: { issues: [...] } }
 
-        setSaveDisabled(!(allFilled && passwordValid));
-    }, [createUser, passwordInput, title, content]);
+        if(result.success){
+            setSaveDisabled(false);
+        } else{
+            setSaveDisabled(true);
+        }
+    }, [createUser, userPassword, title, content]);
 
 
     const fetchBoardModify = async (boardId) => {
-
-        const res = await getBoardForModify(boardId);
-
-        const result = await res.json(); // response 객체 변환
-        console.log("----", result);
-        setData(result);
-        setCreateUser(result.board.createUser);
-        setTitle(result.board.title);
-        setContent(result.board.content);
+        try {
+            const result = await getBoardForModify(boardId);
+            setData(result);
+            setCreateUser(result.board.createUser);
+            setTitle(result.board.title);
+            setContent(result.board.content);
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     if (!data) return <Loading />;
@@ -57,7 +63,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
         const formData = new FormData();
         formData.append('boardId', boardId);
         formData.append('createUser', createUser);
-        formData.append('passwordInput', passwordInput);
+        formData.append('userPassword', userPassword);
         formData.append('title', title);
         formData.append('content', content);
         deleteFileIds.forEach(id => formData.append('deleteIds', id));
@@ -141,7 +147,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
                             <input
                                 type="password"
                                 name="password"
-                                onChange={(e) => setPasswordInput(e.target.value)}
+                                onChange={(e) => setUserPassword(e.target.value)}
                                 className="w-full max-w-xs border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400"
                             />
                         </div>

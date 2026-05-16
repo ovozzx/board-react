@@ -7,16 +7,12 @@ export default async function BoardListPage() {
 
     // 서버에서 초기 데이터 fetch (1페이지, 검색 조건 없음)
     // 서버 컴포넌트의 fetch는 기본적으로 캐시됨
-    const res = await getBoards("");
-    // const res = await fetch(`${API_BASE_URL}/boards?page=1`, {
-    //     cache: 'no-store' // 항상 최신 데이터
-    // });
-
-    if (!res.ok) {
-        return <div className="max-w-5xl mx-auto px-4 py-10 text-red-500">목록을 불러올 수 없습니다. (status: {res.status})</div>;
+    let data; //  const는 선언 시점에 무조건 값을 줘야 함. let은 블록 스코프
+    try {
+        data = await getBoards("");
+    } catch (err) {
+        return <div className="max-w-5xl mx-auto px-4 py-10 text-red-500">목록을 불러올 수 없습니다. ({err.message})</div>;
     }
-
-    const data = await res.json();
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-10">

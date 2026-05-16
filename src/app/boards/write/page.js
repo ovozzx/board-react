@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import {getCategories, writeBoard} from '@/api/apiUrl';
 import { useRouter } from 'next/navigation';
+import {writeBoardValidate} from "@/components/common/validate";
 
 export default function BoardWritePage() {
     const router = useRouter();
@@ -15,42 +16,54 @@ export default function BoardWritePage() {
     const [fileInputs, setFileInputs] = useState([null]);
     const [errors, setErrors] = useState({ passwordMatch: false, passwordRegex: false });
     const [saveDisabled, setSaveDisabled] = useState(true);
-    // TODO : 상태 관리 -> 이뮤터블. 새로운 값을 만들어서 넣어야 함
-
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{4,15}$/;
 
     const [categoryList, setCategoryList] = useState(null);
 
     const fetchCategoryList = async () => {
-        const res = await getCategories();
-        const categoryList = await res.json();
-        setCategoryList(categoryList);
-        console.log(categoryList);
+        try {
+            const list = await getCategories();
+            setCategoryList(list);
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     useEffect(() => {
         fetchCategoryList();
     }, []);
 
-    useEffect(() => {
-        if (categoryList && categoryList.length > 0 && !categoryId) { // 비동기 데이터 기반 기본값 자동 세팅
-            setCategoryId(categoryList[0].categoryId);
-        }
-    }, [categoryList]);
+
 
     // 입력 검증
     // TODO : zod 조드, yup? -> 유효성 검증 찾아보기
     useEffect(() => {
-        const allFilled = createUser && password && passwordConfirm && title && content && categoryId;
-        const passwordMatch = password === passwordConfirm;
-        const passwordValid = passwordRegex.test(password);
-
-        setErrors({
-            passwordMatch: !passwordMatch,
-            passwordRegex: !passwordValid
+        const result = writeBoardValidate.safeParse({
+            createUser,
+            password,
+            passwordConfirm,
+            title,
+            content,
+            categoryId
         });
+        //  { success: true, data: {...} } or  { success: false, error: { issues: [...] } }
 
-        setSaveDisabled(!(allFilled && passwordMatch && passwordValid));
+        if(result.success){
+            setErrors({
+                passwordMatch: false,
+                passwordRegex: false
+            })
+            setSaveDisabled(false);
+        } else{
+            const hasPasswordMatchError = result.error.issues.some(i => i.path[0] === 'passwordConfirm'); // path에는 에러 띄울 필드 배열 들어감. 배열에 조건을 만족하는 요소가 하나라도 있나
+            const hasPasswordRegexError = result.error.issues.some(i => i.path[0] === 'password');
+            setErrors({
+                passwordMatch: hasPasswordMatchError,
+                passwordRegex: hasPasswordRegexError
+            })
+            setSaveDisabled(true);
+        }
+
+
     }, [createUser, password, passwordConfirm, title, content, categoryId]);
 
     const handleFileChange = (index, e) => {
@@ -112,6 +125,7 @@ export default function BoardWritePage() {
                             onChange={(e) => setCategoryId(e.target.value)}
                             className="border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400"
                         >
+                            <option>카테고리 선택</option>
                             {categoryList?.map(category => (
                                 <option key={category.categoryId} value={category.categoryId}>
                                     {category.categoryName}

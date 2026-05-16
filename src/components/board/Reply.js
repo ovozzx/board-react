@@ -16,10 +16,13 @@ const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 �
 
     // 등록 후 갱신
     const onReloadReplyList = async () => {
-        const res = await getBoard(boardId);
-        const data = await res.json();
-        setReplyList(data.replyList);
-        setActiveReplyId(null);
+        try {
+            const data = await getBoard(boardId);
+            setReplyList(data.replyList);
+            setActiveReplyId(null);
+        } catch (err) {
+            alert(err.message);
+        }
     }
 
     return (

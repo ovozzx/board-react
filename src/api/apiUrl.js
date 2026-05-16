@@ -2,19 +2,25 @@ export const API_BASE_URL = "http://localhost:8081/api";
 
 // 게시글 목록 조회
 export const getBoards = async (params) => {
-    return await fetch(`${API_BASE_URL}/boards?${params.toString()}`, {
+    const res = await fetch(`${API_BASE_URL}/boards?${params.toString()}`, {
         cache: 'no-store'
     });
+    if (!res.ok) throw new Error(`목록 조회 실패 (${res.status})`);
+    return await res.json();
 };
 
 // 게시글 상세 조회
 export const getBoard = async (boardId) => {
-    return await fetch(`${API_BASE_URL}/boards/${boardId}`);
+    const res = await fetch(`${API_BASE_URL}/boards/${boardId}`);
+    if (!res.ok) throw new Error(`게시글 조회 실패 (${res.status})`);
+    return await res.json();
 };
 
 // 카테고리 목록 조회
 export const getCategories = async () => {
-    return await fetch(`${API_BASE_URL}/boards/cateogories`);
+    const res = await fetch(`${API_BASE_URL}/boards/cateogories`);
+    if (!res.ok) throw new Error(`카테고리 조회 실패 (${res.status})`);
+    return await res.json();
 };
 
 // 게시글 등록
@@ -27,7 +33,9 @@ export const writeBoard = async (formData) => {
 
 // 게시글 수정 조회
 export const getBoardForModify = async (boardId) => {
-    return await fetch(`${API_BASE_URL}/boards/${boardId}/modify`);
+    const res = await fetch(`${API_BASE_URL}/boards/${boardId}/modify`);
+    if (!res.ok) throw new Error(`게시글 조회 실패 (${res.status})`);
+    return await res.json();
 };
 
 // 게시글 수정
