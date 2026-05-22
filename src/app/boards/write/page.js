@@ -36,6 +36,7 @@ export default function BoardWritePage() {
 
     // 입력 검증
     // TODO : zod 조드, yup? -> 유효성 검증 찾아보기
+    // TODO zod를 객체로서 접근. 필드별로 적용하지 말고 (form 바뀔 때 고려)
     useEffect(() => {
         const result = writeBoardValidate.safeParse({
             createUser,

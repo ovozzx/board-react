@@ -1,5 +1,13 @@
 export const API_BASE_URL = "http://localhost:8081/api";
 
+// TODO 주석 아래처럼 js doc
+// TODO 글로벌 핸들러 ex. 네트워크 오류. 사용자 반응이 없는 오류 최악의 케이스 등 (관리자가 짐작할 수 있게)
+// 예외 글로벌 핸들러에 단일 스레드라 안 잡힘...
+/**
+ *
+ * @param params
+ * @returns {Promise<any>}
+ */
 // 게시글 목록 조회
 export const getBoards = async (params) => {
     const res = await fetch(`${API_BASE_URL}/boards?${params.toString()}`, {
