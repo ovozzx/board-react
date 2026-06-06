@@ -37,7 +37,7 @@ const BoardList = ({ initialData }) => { // 서버에서 내려온 초기 데이
             setStartDate(result.startDate);
             setEndDate(result.endDate);
         } catch (err) {
-            alert(err.message);
+            console.error(err);
         }
     };
 

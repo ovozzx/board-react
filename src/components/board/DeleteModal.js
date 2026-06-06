@@ -12,13 +12,13 @@ const DeleteModal = ({ boardId, onClose, onDeleted }) => {
             return;
         }
 
-        const res = await deleteBoard(boardId, password);
-
-        if (res.ok) {
+        try{
+            await deleteBoard(boardId, password); // throw가 일어나면 그 즉시 같은 try 블록 안의 다음 줄들이 건너뛰어지고 catch로 점프
             alert("삭제되었습니다.");
             onDeleted(); // 부모에게 삭제 완료 알림 (페이지 이동 등) -> 관심사의 분리 (다른 페이지에서 같은 모달을 사용할 때 필요. 처리 후 동작이 다를 거기 때문) => 하위 컴포넌트는 "무슨 일이 일어났는지"만 알리고, "그래서 뭘 할지"는 부모가 결정한다.
-        } else {
-            alert("비밀번호가 일치하지 않거나 삭제 중 오류가 발생했습니다.");
+
+        } catch (err) {
+            console.error(err);
         }
     };
 

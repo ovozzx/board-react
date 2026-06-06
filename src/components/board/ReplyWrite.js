@@ -11,15 +11,15 @@ const ReplyWrite = ({ boardId, parentId, onSuccess }) => { // 서버에서 내�
             alert("댓글을 입력해주세요.");
             return;
         }
-        const res = await registerReply(boardId, parentId, replyContent);
-
-        if(res.ok){
+        try {
+            await registerReply(boardId, parentId, replyContent);
             setReplyContent("");
             // 댓글 등록 후 최신 댓글 목록 다시 조회
             onSuccess();
-        } else{
-            alert("댓글 등록에 실패하였습니다.");
+        } catch (err){
+            console.error(err);
         }
+
     };
 
     return (

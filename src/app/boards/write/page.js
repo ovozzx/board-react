@@ -24,7 +24,7 @@ export default function BoardWritePage() {
             const list = await getCategories();
             setCategoryList(list);
         } catch (err) {
-            alert(err.message);
+            console.error(err);
         }
     };
 
@@ -96,16 +96,10 @@ export default function BoardWritePage() {
         // 각 요소를 Boolean(element)로 평가 → null, undefined, 0, "" 등은 false로 걸러짐
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await writeBoard(formData);
-
-            if (res.ok) {
-                window.location.href = '/boards';
-            } else {
-                alert('등록 실패');
-            }
-        } catch (err) {
+            await writeBoard(formData);
+            window.location.href = '/boards';
+        } catch (err) { // exceptionHandler가 던진 걸 잡음
             console.error(err);
-            alert('서버 오류');
         }
     };
 

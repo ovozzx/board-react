@@ -23,7 +23,7 @@ export default function BoardDetailPage({ params }) {
                 const result = await getBoard(boardId);
                 setData(result);
             } catch (err) {
-                alert(err.message);
+                console.error(err);
             }
         }
         fetchDetail();

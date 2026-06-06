@@ -50,7 +50,7 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
             setTitle(result.board.title);
             setContent(result.board.content);
         } catch (err) {
-            alert(err.message);
+            console.error(err);
         }
     };
 
@@ -70,17 +70,11 @@ export default function BoardModifyPage({params}) { // params: { boardId: "5" },
         fileInputs.flat().forEach(file => formData.append('attachmentList', file));
         // flat() = "배열 안 배열을 풀어서 1차원 배열로 만들어주는 함수". 안쓰면 배열 자체가 들어가서 서버에서 제대로 인식 안됨
         try {
-            const res = await modifyBoard(boardId, formData);
-
-            if (res.ok) {
-                alert("수정이 완료되었습니다.");
-                window.location.href = `/boards/${boardId}`;
-            } else {
-                res.text().then(msg => alert(msg)); // res.text() / res.json() → Promise 반환 ==> await 또는 then 으로 결과 받아야 함
-            }
+            await modifyBoard(boardId, formData);
+            alert("수정이 완료되었습니다.");
+            window.location.href = `/boards/${boardId}`;
         } catch (err) {
             console.error(err);
-            alert('서버 오류');
         }
     };
 

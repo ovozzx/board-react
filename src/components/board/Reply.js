@@ -21,7 +21,7 @@ const Reply = ({ boardId, replyList: initialReplyList }) => { // 서버에서 �
             setReplyList(data.replyList);
             setActiveReplyId(null);
         } catch (err) {
-            alert(err.message);
+            console.error(err);
         }
     }
 
